@@ -91,49 +91,65 @@ router.post('/generate', async (req, res) => {
     // For custom generation without user profile, we'll use a mock user ID
     // The Python backend will still generate based on the provided parameters
     // We could add a direct endpoint in Python for this, but for now we'll use the existing one
-    const response = await fetch(
-      `${PYTHON_API_URL}/api/hurricane/checklist/1?language=${language}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
+    
+    let response;
+    let data;
+    
+    try {
+      // Try to fetch from Python backend with timeout
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 5000)
+      );
+      
+      const fetchPromise = fetch(
+        `${PYTHON_API_URL}/api/hurricane/checklist/1?language=${language}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
+      );
+      
+      response = await Promise.race([fetchPromise, timeoutPromise]);
+
+      if (response.ok) {
+        data = await response.json();
+        
+        // Return the checklist data from Python backend
+        return res.json({
+          success: true,
+          language: data.language,
+          checklist: data.checklist_text,
+          modelUsed: data.model_used,
+          generatedAt: new Date().toISOString()
+        });
       }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      // If user not found or error, return a general checklist
-      return res.json({
-        success: true,
-        language: language,
-        checklist: generateDefaultChecklist(household_composition, medical_needs),
-        modelUsed: 'default',
-        generatedAt: new Date().toISOString(),
-        note: 'Using default checklist template'
-      });
+    } catch (fetchError) {
+      // Python backend unavailable or timeout
+      console.warn('Python backend unavailable, using default checklist:', fetchError.message);
     }
 
-    // Return the checklist data
+    // If user not found or error, return a general checklist
     res.json({
       success: true,
-      language: data.language,
-      checklist: data.checklist_text,
-      modelUsed: data.model_used,
-      generatedAt: new Date().toISOString()
+      language: language,
+      checklist: generateDefaultChecklist(household_composition, medical_needs),
+      modelUsed: 'default',
+      generatedAt: new Date().toISOString(),
+      note: 'Using default checklist template'
     });
 
   } catch (error) {
     console.error('Checklist Generation Error:', error);
     
-    // Fallback to default checklist
-    res.json({
+    // Fallback to default checklist - ensure CORS headers are sent
+    res.status(200).json({
       success: true,
-      language: req.body.language || 'en',
+      language: req.body?.language || 'en',
       checklist: generateDefaultChecklist(
-        req.body.household_composition || {},
-        req.body.medical_needs || {}
+        req.body?.household_composition || {},
+        req.body?.medical_needs || {}
       ),
       modelUsed: 'default',
       generatedAt: new Date().toISOString(),

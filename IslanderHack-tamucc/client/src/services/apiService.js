@@ -3,7 +3,7 @@
  * Base URL can be configured via environment variable
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 class ApiService {
   constructor(baseUrl = API_BASE_URL) {
@@ -25,15 +25,35 @@ class ApiService {
         ...options,
       });
 
-      const data = await response.json();
-
+      // Handle non-JSON responses (e.g., network errors, CORS errors)
       if (!response.ok) {
-        throw new Error(data.error || `API Error: ${response.status}`);
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          // If response is not JSON, create a generic error
+          throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        }
+        throw new Error(errorData.error || `API Error: ${response.status}`);
+      }
+
+      // Try to parse JSON, handle cases where response might not be JSON
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.warn(`Response from ${endpoint} is not valid JSON`, parseError);
+        throw new Error('Invalid response format from server');
       }
 
       return data;
     } catch (error) {
-      console.error(`API request failed: ${endpoint}`, error);
+      // Enhanced error logging
+      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+        console.error(`API request failed (CORS/Network): ${endpoint}. Check if server is running at ${this.baseUrl}`);
+      } else {
+        console.error(`API request failed: ${endpoint}`, error);
+      }
       throw error;
     }
   }

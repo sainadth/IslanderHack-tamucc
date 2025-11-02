@@ -29,7 +29,8 @@ export default function WeatherRiskAnalysis() {
         : { zip: location.zip };
 
       // Fetch weather and hazard analysis
-      const response = await fetch(`http://localhost:5000/api/weather/analyze?${new URLSearchParams(params)}`);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      const response = await fetch(`${apiUrl}/api/weather/analyze?${new URLSearchParams(params)}`);
       const data = await response.json();
 
       if (data.success) {

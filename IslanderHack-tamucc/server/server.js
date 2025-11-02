@@ -28,17 +28,21 @@ const corsOptions = {
   optionsSuccessStatus: 200 // For legacy browser support
 };
 
-// Middleware
+// Middleware - ORDER MATTERS!
+// CORS must be first to handle preflight requests
 app.use(cors(corsOptions));
+
+// Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Handle preflight requests explicitly
-// app.options('*', cors(corsOptions));
 
 // Logging middleware
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  // Log CORS headers for debugging
+  if (req.method === 'OPTIONS') {
+    console.log('  OPTIONS preflight request received');
+  }
   next();
 });
 
@@ -102,17 +106,40 @@ app.get('/', (req, res) => {
   });
 });
 
-// 404 handler
+// 404 handler - must preserve CORS headers
 app.use((req, res) => {
+  // Ensure CORS headers are sent even for 404
+  const origin = req.headers.origin;
+  const allowedOrigins = corsOptions.origin;
+  
+  if (origin && (Array.isArray(allowedOrigins) ? allowedOrigins.includes(origin) : allowedOrigins === origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', corsOptions.methods.join(', '));
+    res.setHeader('Access-Control-Allow-Headers', corsOptions.allowedHeaders.join(', '));
+  }
+  
   res.status(404).json({
     success: false,
     message: 'Route not found'
   });
 });
 
-// Error handling middleware
+// Error handling middleware - must preserve CORS headers
 app.use((err, req, res, next) => {
   console.error('Error:', err);
+  
+  // Ensure CORS headers are still sent even on errors
+  const origin = req.headers.origin;
+  const allowedOrigins = corsOptions.origin;
+  
+  if (origin && (Array.isArray(allowedOrigins) ? allowedOrigins.includes(origin) : allowedOrigins === origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', corsOptions.methods.join(', '));
+    res.setHeader('Access-Control-Allow-Headers', corsOptions.allowedHeaders.join(', '));
+  }
+  
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal server error',

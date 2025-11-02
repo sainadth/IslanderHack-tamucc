@@ -3,7 +3,7 @@
  * Handles web push notification subscriptions and management
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 /**
  * Request notification permission from user
