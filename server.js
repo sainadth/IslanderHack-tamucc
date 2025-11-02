@@ -30,7 +30,16 @@ const blandAIVoiceId = process.env.BLAND_AI_VOICE_ID || 'e1289219-0ea2-4f22-a994
 const defaultTargetNumber = process.env.TARGET_PHONE_NUMBER || '+13614259843';
 
 // Base URL for webhook callbacks (needs to be publicly accessible for production)
-const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+// BLAND AI requires webhooks to use HTTPS
+let baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+
+// Validate that webhook URL starts with https:// (required by BLAND AI)
+if (baseUrl && !baseUrl.startsWith('https://')) {
+  console.error(`⚠️  ERROR: BASE_URL must start with https:// for webhooks to work.`);
+  console.error(`   Current BASE_URL: ${baseUrl}`);
+  console.error(`   Please set BASE_URL to an HTTPS URL (e.g., use ngrok or deploy to a cloud platform)`);
+  console.error(`   See WEBHOOK_SETUP.md for setup instructions`);
+}
 
 if (!blandAIApiKey) {
   console.log('BLAND AI API key not found. Please set BLAND_AI_API_KEY in .env file');
@@ -126,6 +135,16 @@ app.post('/api/make-call', async (req, res) => {
     // Create the interactive script for BLAND AI
     const script = createBlandAIScript(user, emergencyType, transcribedMessage || '');
     
+    // Validate webhook URL before making API call
+    const webhookUrl = `${baseUrl}/api/bland-webhook`;
+    if (!webhookUrl.startsWith('https://')) {
+      return res.status(400).json({ 
+        error: 'Invalid webhook URL',
+        details: 'webhook must be a string that starts with https://',
+        message: `BASE_URL must start with https:// for BLAND AI webhooks. Current value: ${baseUrl}. Please set BASE_URL to an HTTPS URL (e.g., use ngrok for local testing or deploy to a cloud platform). See WEBHOOK_SETUP.md for instructions.`
+      });
+    }
+
     // Prepare BLAND AI API request
     const headers = {
       'Authorization': blandAIApiKey,
@@ -147,7 +166,7 @@ app.post('/api/make-call', async (req, res) => {
       "background_track": "none",
       "voicemail_action": "hangup",
       "task": script,  // BLAND AI uses "task" parameter for the conversation script
-      "webhook": `${baseUrl}/api/bland-webhook`,
+      "webhook": webhookUrl,
       "metadata": {
         userId: userId,
         emergencyType: emergencyType

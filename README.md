@@ -1,13 +1,15 @@
 # SOS Voice Outbound Call Alert System
 
-An emergency alert system that records 10 seconds of speech, transcribes it, fetches user data, and makes an **interactive AI-powered call** via BLAND AI to deliver the emergency message.
+An emergency alert system that records 10 seconds of speech, transcribes it, fetches user data, and makes an **interactive AI-powered call** via AI calling VOIP to deliver the emergency message.
+
+DEMO YOUTUBE LINK - https://www.youtube.com/watch?v=FcOt1G8bdXs
 
 ## 🚀 Quick Run Checklist
 
 Follow these steps in order:
 
 - [ ] Install dependencies: `npm install`
-- [ ] Get BLAND AI API key from [bland.ai](https://bland.ai)
+- [ ] Get AI calling VOIPAPI key 
 - [ ] Create `.env` file with your API key
 - [ ] Set up public URL (use ngrok or deploy)
 - [ ] Start server: `npm start`
@@ -26,14 +28,14 @@ Follow these steps in order:
 
 - **Frontend**: HTML, CSS, JavaScript (Web Speech API for speech-to-text)
 - **Backend**: Node.js, Express
-- **Voice Calls**: BLAND AI (interactive AI-powered calls)
+- **Voice Calls**: AI calling VOIP(interactive AI-powered calls)
 - **Database**: SQLite3 (users.db)
 - **AI Analysis**: Emergency type detection (fire, medical, police, accident)
 
 ## Prerequisites
 
 Before starting, you'll need:
-1. **BLAND AI Account & API Key**: Sign up at [bland.ai](https://bland.ai) and get your API key
+1. **AI calling VOIPAccount & API Key**: Sign up at [bland.ai](https://bland.ai) and get your API key
 2. **Node.js**: Version 14 or higher
 3. **Public URL** (for webhooks): Use ngrok for testing, or deploy for production
 
@@ -45,7 +47,7 @@ Before starting, you'll need:
 npm install
 ```
 
-### Step 2: Get Your BLAND AI API Key
+### Step 2: Get Your AI calling VOIPAPI Key
 
 1. Sign up at [bland.ai](https://bland.ai) (or log in if you have an account)
 2. Navigate to your dashboard and copy your API key
@@ -63,14 +65,14 @@ BASE_URL=http://localhost:3000
 ```
 
 **Environment Variables Explained**:
-- `BLAND_AI_API_KEY` **(REQUIRED)**: Your BLAND AI API key from step 2
+- `BLAND_AI_API_KEY` **(REQUIRED)**: Your AI calling VOIPAPI key from step 2
 - `BLAND_AI_VOICE_ID` (optional): Voice ID for the AI caller (default provided works)
 - `TARGET_PHONE_NUMBER` (optional): Default emergency number to call (use E.164 format: +1XXXXXXXXXX)
 - `BASE_URL` (required for webhooks): Public URL for webhook callbacks (see Step 4)
 
 ### Step 4: Set Up Public URL (Required for Webhooks)
 
-BLAND AI needs a publicly accessible URL to send webhook callbacks. Choose one option:
+AI calling VOIPneeds a publicly accessible URL to send webhook callbacks. Choose one option:
 
 #### Option A: Using ngrok (Quick Testing)
 
@@ -120,9 +122,9 @@ npm run dev
 
 You should see:
 ```
-BLAND AI configured
+AI calling VOIPconfigured
 SOS Call System server running on http://localhost:3000
-Using BLAND AI for interactive emergency calls
+Using AI calling VOIPfor interactive emergency calls
 Database initialized successfully
 ```
 
@@ -140,7 +142,7 @@ The database (`users.db`) is automatically created with default users:
 2. **Click the SOS Button**: Press and hold the button
 3. **Speak your emergency**: Say something like "I need help, there's a fire"
 4. **Release the button**: After 10 seconds, it will automatically process
-5. **Call Initiated**: BLAND AI will make an interactive call to the emergency number
+5. **Call Initiated**: AI calling VOIPwill make an interactive call to the emergency number
 
 ## Complete Pipeline Flow
 
@@ -150,7 +152,7 @@ Here's what happens when you trigger SOS:
 2. **📝 **Transcription**: Web Speech API converts speech to text
 3. **🤖 **AI Analysis**: System detects emergency type (fire/medical/police/accident)
 4. **💾 **Database Lookup**: Fetches user info (name, location, contacts, medical info)
-5. **📞 **BLAND AI Call**: Makes interactive call to emergency number
+5. **📞 **AI calling VOIPCall**: Makes interactive call to emergency number
    - AI introduces itself and provides emergency details
    - Can answer operator questions naturally
    - Provides location, contact info, medical info as needed
@@ -307,7 +309,7 @@ Get user details by ID.
 #### ❌ "Missing required parameter: task" Error
 **Solution**: This has been fixed in the latest version. Make sure you're using the latest code. The API uses `task` parameter for the conversation script.
 
-#### ❌ "BLAND AI not configured" Error
+#### ❌ "AI calling VOIPnot configured" Error
 **Solution**: 
 - Check your `.env` file exists in the root directory
 - Verify `BLAND_AI_API_KEY` is set correctly (no extra spaces)
@@ -321,7 +323,7 @@ Get user details by ID.
 
 #### ❌ "Call fails" or "Invalid API key"
 **Solution**:
-- Verify your BLAND AI API key is correct
+- Verify your AI calling VOIPAPI key is correct
 - Check your account has available credits/quota
 - Ensure phone number is in E.164 format: `+1XXXXXXXXXX` (include country code)
 
@@ -346,14 +348,13 @@ Get user details by ID.
 ### Debugging Tips
 
 1. **Check Server Logs**: Look at the terminal where you ran `npm start` for detailed error messages
-2. **Test API Key**: Verify your BLAND AI API key works by checking your dashboard
+2. **Test API Key**: Verify your AI calling VOIPAPI key works by checking your dashboard
 3. **Test Webhook URL**: Visit your `BASE_URL/api/bland-webhook` in a browser (should return JSON)
 4. **Check ngrok**: If using ngrok, ensure it's running and the URL hasn't changed
 
 ### Getting Help
 
 - Check the [WEBHOOK_SETUP.md](./WEBHOOK_SETUP.md) file for detailed webhook setup
-- Review BLAND AI documentation: https://docs.bland.ai
 - Check server logs for specific error messages
 
 ## License
