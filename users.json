@@ -1,0 +1,27 @@
+{
+  "user1": {
+    "name": "John Peter",
+    "age": "35",
+    "sex": "Male",
+    "emergencyContact": "361 555 1110",
+    "location": "1702 Ennis Joslin Rd, Corpus Christi, TX 72412",
+    "medicalInfo": "Specially Abled"
+  },
+  "user2": {
+    "name": "Jane Smith",
+    "age": "28",
+    "sex": "Female",
+    "emergencyContact": "+1-555-0101",
+    "location": "456 Oak Ave, Austin, TX 78702",
+    "medicalInfo": "Allergic to penicillin"
+  },
+  "default": {
+    "name": "Emergency User",
+    "age": "Unknown",
+    "sex": "Unknown",
+    "emergencyContact": "+1-555-0000",
+    "location": "Unknown",
+    "medicalInfo": "None provided"
+  }
+}
+

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Voice Calling for Disaster help</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🚨</div>
+                <h1 class="brand-name">AI Voice Calling for Disaster help</h1>
+            </div>
+            <p class="tagline">Emergency Response Portal - AI-Powered Disaster Assistance</p>
+        </div>
+
+        <div class="user-info">
+            <label for="userId" class="input-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                User ID
+            </label>
+            <input type="text" id="userId" value="user1" placeholder="Enter user ID" class="modern-input">
+        </div>
+
+        <div class="sos-button-container">
+            <div class="button-ring"></div>
+            <button id="sosButton" class="sos-button">
+                <div class="button-inner">
+                    <span class="button-icon">🚨</span>
+                    <span class="button-text">SOS</span>
+                </div>
+                <div class="siren-overlay"></div>
+            </button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div id="transcription" class="transcription-container">
+            <div class="transcription-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+                <h3>AI Transcription</h3>
+            </div>
+            <p id="transcriptionText" class="transcription-text">Ready to process your emergency message...</p>
+            <div id="timer" class="timer">
+                <span class="timer-label">Recording</span>
+                <span class="timer-value">00:10</span>
+            </div>
+        </div>
+
+        <div id="callStatus" class="call-status"></div>
+
+        <div id="callTranscript" class="call-transcript-container" style="display: none;">
+            <div class="call-transcript-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <h3>Live Call Transcript</h3>
+            </div>
+            <div id="callTranscriptContent" class="call-transcript-content">
+                <p class="call-transcript-placeholder">Waiting for call to connect...</p>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-item">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-text">AI-Powered Analysis</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-text">Instant Response</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-text">Secure & Private</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
